@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "586001990285",
+    "firebase_url": "https://wefit-e2a92.firebaseio.com",
+    "project_id": "wefit-e2a92",
+    "storage_bucket": "wefit-e2a92.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:586001990285:android:1792d422f9a9105c",
+        "android_client_info": {
+          "package_name": "com.example.healthexercise"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "586001990285-jqq32r8id0sfkvlh3ccvuu7cgtpgshpd.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.healthexercise",
+            "certificate_hash": "c3c8c05d94e51bd826f21347d38b7ee1faeb3561"
+          }
+        },
+        {
+          "client_id": "586001990285-bkgrc60acpl6tenh64c1e1a1jjfk0kvr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCjpmnmYoYCsTyGBWe9t3vhRwVuTPgvHMA"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "586001990285-bkgrc60acpl6tenh64c1e1a1jjfk0kvr.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
