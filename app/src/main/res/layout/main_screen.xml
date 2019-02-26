@@ -2,8 +2,10 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
+    xmlns:custom="http://schemas.android.com/tools"
+
     android:fitsSystemWindows="true"
-    android:background="#57BC90">
+    android:background="#FFFFFF">
 
     <LinearLayout
         android:orientation="vertical"
@@ -14,13 +16,15 @@
         android:paddingRight="24dp">
 
         <com.github.lzyzsd.circleprogress.ArcProgress
-            android:id="@+id/arc_progress"
-            android:background="#214193"
-            android:layout_marginLeft="50dp"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            custom:arc_progress="55"
-            custom:arc_bottom_text="MEMORY"/>
+            android:id="@+id/distance_progress"
+            android:layout_width="250dp"
+            android:layout_height="250dp"
+            android:layout_gravity="center"
+            custom:arc_unfinished_color="#C8C8C8"
+            custom:arc_finished_color="#57BC90"
+            custom:arc_text_color="#57BC90"
+            custom:arc_stroke_width="15dp"
+            />
 
     </LinearLayout>
 </ScrollView>
