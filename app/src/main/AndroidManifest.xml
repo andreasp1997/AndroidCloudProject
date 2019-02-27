@@ -24,6 +24,12 @@
             </intent-filter>
         </activity>
 
+        <activity android:name=".MainActivity">
+            <intent-filter>
+                <action android:name="com.test.app.TEST" />
+            </intent-filter>
+        </activity>
+
     </application>
 
 </manifest>
