@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
+
+    android:fitsSystemWindows="true"
+    android:background="#FFFFFF">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="56dp"
+        android:paddingLeft="24dp"
+        android:paddingRight="24dp">
+
+        <com.github.lzyzsd.circleprogress.ArcProgress
+            android:id="@+id/distance_progress"
+            android:layout_width="250dp"
+            android:layout_height="250dp"
+            android:layout_gravity="center"
+            custom:arc_unfinished_color="#C8C8C8"
+            custom:arc_finished_color="#57BC90"
+            custom:arc_text_color="#57BC90"
+            custom:arc_stroke_width="15dp"
+
+            />
+
+    </LinearLayout>
+</ScrollView>

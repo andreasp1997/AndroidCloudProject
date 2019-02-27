@@ -13,18 +13,5 @@
         android:layout_height="wrap_content"
         android:paddingTop="56dp"
         android:paddingLeft="24dp"
-        android:paddingRight="24dp">
-
-        <com.github.lzyzsd.circleprogress.ArcProgress
-            android:id="@+id/distance_progress"
-            android:layout_width="250dp"
-            android:layout_height="250dp"
-            android:layout_gravity="center"
-            custom:arc_unfinished_color="#C8C8C8"
-            custom:arc_finished_color="#57BC90"
-            custom:arc_text_color="#57BC90"
-            custom:arc_stroke_width="15dp"
-            />
-
-    </LinearLayout>
+        android:paddingRight="24dp"/>
 </ScrollView>
