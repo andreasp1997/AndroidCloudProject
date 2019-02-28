@@ -5,7 +5,7 @@
     xmlns:custom="http://schemas.android.com/tools"
 
     android:fitsSystemWindows="true"
-    android:background="#FFFFFF">
+    android:background="#E8E8E8">
 
     <LinearLayout
         android:orientation="vertical"
