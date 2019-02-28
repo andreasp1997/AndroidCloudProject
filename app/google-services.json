@@ -23,6 +23,14 @@
           }
         },
         {
+          "client_id": "586001990285-l0e465orm5s38v4s9f7pqmp56m5iluhk.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.healthexercise",
+            "certificate_hash": "bc59d40dd9685dda5f53bdb0b7398038efe846bd"
+          }
+        },
+        {
           "client_id": "586001990285-bkgrc60acpl6tenh64c1e1a1jjfk0kvr.apps.googleusercontent.com",
           "client_type": 3
         }
