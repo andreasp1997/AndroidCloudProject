@@ -12,15 +12,15 @@ import android.view.ViewGroup;
 
 public class HomeFragment extends Fragment {
 
-   // private ArcProgress arcProgress;
+   //private ArcProgress arcProgress;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.home_frag, container, false);
 
-       // arcProgress = (ArcProgress) v.findViewById(R.id.distance_progress);
-       // arcProgress.setSuffixText("");
+       //arcProgress = (ArcProgress) v.findViewById(R.id.distance_progress);
+       //arcProgress.setSuffixText("");
 
         return v;
     }
