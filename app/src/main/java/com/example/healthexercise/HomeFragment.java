@@ -1,5 +1,8 @@
 package com.example.healthexercise;
 
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -10,7 +13,7 @@ import android.view.ViewGroup;
 
 //import com.github.lzyzsd.circleprogress.ArcProgress;
 
-public class HomeFragment extends Fragment {
+public class HomeFragment extends Fragment implements SensorEventListener, StepListener {
 
    //private ArcProgress arcProgress;
 
@@ -23,5 +26,20 @@ public class HomeFragment extends Fragment {
        //arcProgress.setSuffixText("");
 
         return v;
+    }
+
+    @Override
+    public void onSensorChanged(SensorEvent event) {
+        
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+
+    }
+
+    @Override
+    public void step(long timeNS) {
+
     }
 }
