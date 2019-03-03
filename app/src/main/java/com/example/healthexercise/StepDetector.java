@@ -1,11 +1,15 @@
 package com.example.healthexercise;
 
+/* This class accepts updates from accelerometer sensor and deploys the sensor filter to detect
+if a step has been covered by the user.*/
+
 public class StepDetector {
 
     private static final int ACCEL_RING_SIZE = 50;
     private static final int VEL_RING_SIZE = 10;
 
-    // Step threshold can be changed here according sensitivity preferences
+    // Step threshold can be changed below for sensitivity preferences.
+    // decrease value to increase sensitivity.
     private static final float STEP_THRESHOLD = 50f;
 
     private static final int STEP_DELAY_NS = 250000000;

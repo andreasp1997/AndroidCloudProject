@@ -1,5 +1,7 @@
 package com.example.healthexercise;
 
+//class contains an algorithm to filter out values that has close approximation to steps.
+
 public class SensorFilter {
 
     private SensorFilter() {
