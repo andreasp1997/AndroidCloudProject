@@ -40,6 +40,7 @@ public class HomeFragment extends Fragment implements SensorEventListener, StepL
         sensorManager.registerListener(this, accel, SensorManager.SENSOR_DELAY_FASTEST);
 
         arcProgress =(ArcProgress)v.findViewById(R.id.distance_progress);
+        arcProgress.setSuffixText("");
 
         t1 = new Thread() {
             public void run() {
@@ -50,7 +51,8 @@ public class HomeFragment extends Fragment implements SensorEventListener, StepL
                             @Override
                             public void run() {
 
-                                arcProgress.setSuffixText(String.valueOf(numSteps));
+                                arcProgress.setText(String.valueOf(numSteps));
+                                arcProgress.setProgress(numSteps);
 
                             }
                         });//runOnUiThread ends here
