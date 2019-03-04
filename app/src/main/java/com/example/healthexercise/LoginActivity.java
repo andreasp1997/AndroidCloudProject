@@ -28,9 +28,6 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login);
 
-        //FirebaseApp.initializeApp(this);
-
-        //mAuth = FirebaseAuth.getInstance();
 
         input_username = (EditText)findViewById(R.id.input_username);
         input_password = (EditText)findViewById(R.id.input_password);
@@ -43,11 +40,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-
-                LoginActivity.this.startActivity(intent);
-
-                signIn(input_username.toString(),input_password.toString());
+                signIn(input_username.getText().toString(),input_password.getText().toString());
             }
         });
 
@@ -67,13 +60,20 @@ public class LoginActivity extends AppCompatActivity {
 
     private void signIn(String email, String password){
 
-        mAuth.createUserWithEmailAndPassword(email, password)
+        mAuth = FirebaseAuth.getInstance();
+
+        mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             FirebaseUser user = mAuth.getCurrentUser();
+
+                            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+
+                            LoginActivity.this.startActivity(intent);
+
                         } else {
                             // If sign in fails, display a message to the user.
                             Toast.makeText(LoginActivity.this, "Authentication failed.",

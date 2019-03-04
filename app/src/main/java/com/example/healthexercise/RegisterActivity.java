@@ -66,7 +66,7 @@ public class RegisterActivity extends AppCompatActivity {
 
                         } else {
                             // If sign in fails, display a message to the user.
-                            Toast.makeText(RegisterActivity.this, "Authentication failed.",
+                            Toast.makeText(RegisterActivity.this, "Registration failed. Email is either wrong or password is too short",
                                     Toast.LENGTH_SHORT).show();
                         }
 
