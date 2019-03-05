@@ -101,13 +101,13 @@ public class MainActivity extends AppCompatActivity {
             Fragment fragment = null;
             switch (position) {
                 case 0:
-                    fragment = new ExerciseFragment();
+                    fragment = new DietFragment();
                     break;
                 case 1:
                     fragment = new HomeFragment();
                     break;
                 case 2:
-                    fragment = new DietFragment();
+                    fragment = new ExerciseFragment();
                     break;
             }
             return fragment;

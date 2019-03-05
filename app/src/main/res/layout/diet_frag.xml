@@ -1,47 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:paddingBottom="10dp"
-    xmlns:custom="http://schemas.android.com/apk/res-auto"
+    android:background="#E8E8E8"
 
     android:fitsSystemWindows="true"
-    android:background="#E8E8E8">
-
-
+    android:paddingBottom="10dp">
 
     <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="match_parent"
+        android:id="@+id/linearLayout"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:paddingTop="56dp"
+        android:orientation="vertical"
         android:paddingLeft="24dp"
-        android:paddingRight="24dp">
+        android:paddingTop="56dp"
+        android:paddingRight="24dp"
+        custom:layout_constraintEnd_toEndOf="parent"
+        custom:layout_constraintStart_toStartOf="parent"
+        custom:layout_constraintTop_toTopOf="parent">
 
         <android.support.v7.widget.GridLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             custom:columnCount="1"
-            custom:rowCount="2"
-            >
+            custom:rowCount="2">
 
             <android.support.v7.widget.CardView
 
-                custom:layout_gravity="center"
-                android:layout_height="match_parent"
                 android:layout_width="match_parent"
-                custom:layout_columnWeight="1"
-                custom:layout_rowWeight="1"
-                android:layout_marginBottom="16dp"
+                android:layout_height="match_parent"
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
-                custom:cardElevation="8dp"
+                android:layout_marginBottom="16dp"
                 custom:cardCornerRadius="8dp"
+                custom:cardElevation="8dp"
                 custom:layout_column="0"
-                custom:layout_row="0">
-
+                custom:layout_columnWeight="1"
+                custom:layout_gravity="center"
+                custom:layout_row="0"
+                custom:layout_rowWeight="1">
 
                 <ListView
+                    android:id="@+id/list"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent" />
 
@@ -50,7 +51,6 @@
 
         </android.support.v7.widget.GridLayout>
 
-
     </LinearLayout>
 
-</android.support.v4.widget.NestedScrollView>
+</android.support.constraint.ConstraintLayout>
