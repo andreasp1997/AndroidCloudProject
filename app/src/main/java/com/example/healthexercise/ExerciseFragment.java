@@ -10,11 +10,15 @@ import android.view.ViewGroup;
 
 public class ExerciseFragment extends Fragment {
 
+
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.exercise_frag, container, false);
+
+
+
         return v;
     }
-
 }
