@@ -27,6 +27,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -54,6 +55,8 @@ public class ExerciseFragment extends Fragment implements OnMapReadyCallback, Lo
     double latitude;
     double longitude;
     Marker marker;
+    boolean exerciseStarted;
+    Thread t1;
 
     private ArrayList<LatLng> points;
     Polyline polyline;
@@ -68,6 +71,45 @@ public class ExerciseFragment extends Fragment implements OnMapReadyCallback, Lo
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
+        final Button exerciseBtn = (Button) v.findViewById(R.id.start_exercise_btn);
+        exerciseBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (exerciseStarted == true){
+                    exerciseStarted = false;
+                } else if (exerciseStarted == false){
+                    exerciseStarted = true;
+                }
+            }
+        });
+
+        t1 = new Thread() {
+            public void run() {
+                try {
+                    while (!isInterrupted()) {
+                        Thread.sleep(100);
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+
+                                if (exerciseStarted == true){
+                                    exerciseBtn.setText("Stop Exercise");
+                                    exerciseBtn.setBackgroundColor(Color.parseColor("#C50000"));
+                                } else if (exerciseStarted == false){
+                                    exerciseBtn.setText("Start Exercise");
+                                    exerciseBtn.setBackgroundColor(Color.parseColor("#57BC90"));
+                                }
+
+                            }
+                        });//runOnUiThread ends here
+                    }//While ends here
+                } catch (InterruptedException e) {
+                }//Catch ends here
+            }
+
+        };
+
+        t1.start();
 
         return v;
     }
