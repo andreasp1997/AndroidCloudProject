@@ -4,6 +4,7 @@ package com.example.healthexercise;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Criteria;
 import android.location.Location;
 
@@ -40,6 +41,10 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
+
+import java.util.ArrayList;
 
 
 public class ExerciseFragment extends Fragment implements OnMapReadyCallback, LocationListener {
@@ -50,11 +55,15 @@ public class ExerciseFragment extends Fragment implements OnMapReadyCallback, Lo
     double longitude;
     Marker marker;
 
+    private ArrayList<LatLng> points;
+    Polyline polyline;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.exercise_frag, container, false);
 
+        points = new ArrayList<LatLng>();
 
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
@@ -67,7 +76,6 @@ public class ExerciseFragment extends Fragment implements OnMapReadyCallback, Lo
     public void onMapReady(GoogleMap googleMap) {
 
         mMap = googleMap;
-        mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
 
         showMap();
 
@@ -75,7 +83,6 @@ public class ExerciseFragment extends Fragment implements OnMapReadyCallback, Lo
 
 
     public void showMap() {
-
 
         // Enable Zoom
         mMap.getUiSettings().setZoomGesturesEnabled(true);
@@ -121,16 +128,30 @@ public class ExerciseFragment extends Fragment implements OnMapReadyCallback, Lo
         latitude = location.getLatitude();
         longitude = location.getLongitude();
 
-        LatLng loc = new LatLng(latitude, longitude);
+        LatLng latLng = new LatLng(latitude, longitude);
+
+        points.add(latLng);
 
         if (marker!=null){
             marker.remove();
         }
 
-        marker=  mMap.addMarker(new MarkerOptions().position(loc).title("Your location"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(loc));
-        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(loc, 16.0f));
+        marker=  mMap.addMarker(new MarkerOptions().position(latLng).title("Your location"));
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 16.0f));
 
+        redrawLine();
+
+    }
+
+    private void redrawLine(){
+
+        PolylineOptions options = new PolylineOptions().width(5).color(Color.GREEN).geodesic(true);
+        for (int i = 0; i < points.size(); i++) {
+            LatLng point = points.get(i);
+            options.add(point);
+        }
+        polyline = mMap.addPolyline(options); //add Polyline
     }
 
     @Override
