@@ -1,6 +1,7 @@
 package com.example.healthexercise;
 
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -27,6 +28,9 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login);
+
+        MediaPlayer mediaPlayer= MediaPlayer.create(LoginActivity.this,R.raw.mii);
+        mediaPlayer.start();
 
 
         input_username = (EditText)findViewById(R.id.input_username);
