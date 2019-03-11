@@ -54,11 +54,14 @@ public class ExerciseFragment extends Fragment implements OnMapReadyCallback, Lo
 
     double latitude;
     double longitude;
+
     Marker marker;
     boolean exerciseStarted;
+
     Thread t1;
 
     private ArrayList<LatLng> points;
+
     Polyline polyline;
 
     @Nullable
@@ -77,6 +80,8 @@ public class ExerciseFragment extends Fragment implements OnMapReadyCallback, Lo
             public void onClick(View v) {
                 if (exerciseStarted == true){
                     exerciseStarted = false;
+                    mMap.clear();
+                    points.clear();
                 } else if (exerciseStarted == false){
                     exerciseStarted = true;
                 }
@@ -172,17 +177,28 @@ public class ExerciseFragment extends Fragment implements OnMapReadyCallback, Lo
 
         LatLng latLng = new LatLng(latitude, longitude);
 
-        points.add(latLng);
+        if (exerciseStarted){
+            points.add(latLng);
 
-        if (marker!=null){
-            marker.remove();
+            if (marker!=null){
+                marker.remove();
+            }
+
+            marker =  mMap.addMarker(new MarkerOptions().position(latLng).title("Your location"));
+            mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 16.0f));
+
+            redrawLine();
+        } else if (!exerciseStarted) {
+
+            if (marker!=null){
+                marker.remove();
+            }
+
+            marker =  mMap.addMarker(new MarkerOptions().position(latLng).title("Your location"));
+            mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 16.0f));
         }
-
-        marker=  mMap.addMarker(new MarkerOptions().position(latLng).title("Your location"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 16.0f));
-
-        redrawLine();
 
     }
 
