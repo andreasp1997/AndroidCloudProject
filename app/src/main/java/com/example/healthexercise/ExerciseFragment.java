@@ -28,6 +28,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -44,7 +46,9 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.maps.android.SphericalUtil;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 
@@ -54,6 +58,10 @@ public class ExerciseFragment extends Fragment implements OnMapReadyCallback, Lo
 
     double latitude;
     double longitude;
+    double distance;
+    DecimalFormat df;
+
+    TextView distanceMoved;
 
     Marker marker;
     boolean exerciseStarted;
@@ -68,6 +76,9 @@ public class ExerciseFragment extends Fragment implements OnMapReadyCallback, Lo
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.exercise_frag, container, false);
+
+        distanceMoved = v.findViewById(R.id.text_distance);
+        df = new DecimalFormat("###.###");
 
         points = new ArrayList<LatLng>();
 
@@ -100,6 +111,7 @@ public class ExerciseFragment extends Fragment implements OnMapReadyCallback, Lo
                                 if (exerciseStarted == true){
                                     exerciseBtn.setText("Stop Exercise");
                                     exerciseBtn.setBackgroundColor(Color.parseColor("#C50000"));
+                                    distanceMoved.setText(df.format(distance) + " meter(s)");
                                 } else if (exerciseStarted == false){
                                     exerciseBtn.setText("Start Exercise");
                                     exerciseBtn.setBackgroundColor(Color.parseColor("#57BC90"));
@@ -178,7 +190,9 @@ public class ExerciseFragment extends Fragment implements OnMapReadyCallback, Lo
         LatLng latLng = new LatLng(latitude, longitude);
 
         if (exerciseStarted){
+
             points.add(latLng);
+            distance = SphericalUtil.computeLength(points);
 
             if (marker!=null){
                 marker.remove();
