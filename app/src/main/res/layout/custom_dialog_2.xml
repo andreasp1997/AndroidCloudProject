@@ -3,7 +3,9 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:padding="5dp"
+    >
 
 
     <EditText
@@ -12,13 +14,58 @@
         android:layout_height="wrap_content"
         android:backgroundTint="#57BC90"
         android:inputType="number"
+        android:hint="Weight"
+        android:textColorHint="#B8B8B8"
+        />
+
+    <EditText
+        android:id="@+id/edit_height"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:backgroundTint="#57BC90"
+        android:inputType="number"
+        android:hint="Height (cm)"
+        android:textColorHint="#B8B8B8"
+        />
+
+    <Spinner
+        android:id="@+id/spinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:background="@android:drawable/btn_dropdown"
+        android:spinnerMode="dropdown"/>
+
+    <EditText
+        android:id="@+id/edit_age"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:backgroundTint="#57BC90"
+        android:inputType="number"
+        android:hint="Age"
+        android:textColorHint="#B8B8B8"
         />
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/text_maintain_weight"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="TextView" />
+        android:layout_marginTop="30dp"
+        android:text="---"
+        android:textColor="#B8B8B8"/>
+
+    <EditText
+        android:id="@+id/edit_calories"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:backgroundTint="#57BC90"
+        android:inputType="number"
+        android:hint="Calorie intake"
+        android:textColorHint="#B8B8B8"
+        />
 
 
 </LinearLayout>
