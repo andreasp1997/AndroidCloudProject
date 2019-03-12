@@ -72,14 +72,19 @@ public class ExerciseFragment extends Fragment implements OnMapReadyCallback, Lo
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.exercise_frag, container, false);
 
+        // reference to textview displaying how far the user has walked/jogged (meters)
         distanceMoved = v.findViewById(R.id.text_distance);
+        // average double to only show 3 decimals
         df = new DecimalFormat("###.###");
 
+        // arraylist containing
         points = new ArrayList<LatLng>();
 
+        // reference to mapFragment
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
+        // button for starting exercise. Exercise starts/ends when user presses button
         final Button exerciseBtn = (Button) v.findViewById(R.id.start_exercise_btn);
         exerciseBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -94,6 +99,7 @@ public class ExerciseFragment extends Fragment implements OnMapReadyCallback, Lo
             }
         });
 
+        // thread checking if exercise is on or off. Updates button state and distance
         t1 = new Thread() {
             public void run() {
                 try {
@@ -126,6 +132,7 @@ public class ExerciseFragment extends Fragment implements OnMapReadyCallback, Lo
         return v;
     }
 
+    // method starting googleMap.
     @Override
     public void onMapReady(GoogleMap googleMap) {
 
@@ -135,7 +142,7 @@ public class ExerciseFragment extends Fragment implements OnMapReadyCallback, Lo
 
     }
 
-
+    // set map configurations.
     public void showMap() {
 
         // Enable Zoom
@@ -144,7 +151,7 @@ public class ExerciseFragment extends Fragment implements OnMapReadyCallback, Lo
         //set Map TYPE
         mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
 
-        //enable Current location Button
+        //enable current location
         if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(),
                 Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {

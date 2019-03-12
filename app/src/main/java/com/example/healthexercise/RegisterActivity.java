@@ -14,6 +14,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
@@ -29,7 +30,7 @@ public class RegisterActivity extends AppCompatActivity {
     private Button registerbutton;
     private String epost;
     private String lösen;
-    FirebaseFirestore db = FirebaseFirestore.getInstance();
+    FirebaseFirestore db;
 
     FirebaseAuth mAuth;
 
@@ -37,6 +38,8 @@ public class RegisterActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.register);
+
+        FirebaseApp.initializeApp(RegisterActivity.this);
 
         password = (EditText) findViewById(R.id.input_password);
         email = (EditText) findViewById(R.id.input_email);
@@ -60,6 +63,7 @@ public class RegisterActivity extends AppCompatActivity {
     private void createAccount(final String email, String password){
 
         mAuth = FirebaseAuth.getInstance();
+        db = FirebaseFirestore.getInstance();
 
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
