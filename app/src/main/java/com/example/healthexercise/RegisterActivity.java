@@ -28,8 +28,8 @@ public class RegisterActivity extends AppCompatActivity {
     private EditText password;
     private EditText email;
     private Button registerbutton;
-    private String epost;
-    private String lösen;
+    private String dbEmail;
+    private String dbPass;
     FirebaseFirestore db;
 
     FirebaseAuth mAuth;
@@ -48,8 +48,8 @@ public class RegisterActivity extends AppCompatActivity {
         registerbutton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                lösen = password.getText().toString();
-                epost = email.getText().toString();
+                dbPass = password.getText().toString();
+                dbEmail = email.getText().toString();
                 createAccount(email.getText().toString(),password.getText().toString());
             }
         });
@@ -70,9 +70,9 @@ public class RegisterActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            Map<String, Object> user = new HashMap<>();
-                            user.put("email", ""+epost+"");
-                            user.put("password", ""+lösen+"");
+                            Map<String, String> user = new HashMap<>();
+                            user.put("email", ""+ dbEmail + "");
+                            user.put("password", "" + dbPass + "");
 
                             db.collection("users")
                                     .add(user)
