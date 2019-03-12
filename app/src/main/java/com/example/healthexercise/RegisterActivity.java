@@ -11,16 +11,25 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class RegisterActivity extends AppCompatActivity {
 
     private EditText password;
     private EditText email;
     private Button registerbutton;
+    private String epost;
+    private String lösen;
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     FirebaseAuth mAuth;
 
@@ -36,6 +45,8 @@ public class RegisterActivity extends AppCompatActivity {
         registerbutton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                lösen = password.getText().toString();
+                epost = email.getText().toString();
                 createAccount(email.getText().toString(),password.getText().toString());
             }
         });
@@ -46,7 +57,7 @@ public class RegisterActivity extends AppCompatActivity {
 
 
 
-    private void createAccount(String email, String password){
+    private void createAccount(final String email, String password){
 
         mAuth = FirebaseAuth.getInstance();
 
@@ -55,6 +66,22 @@ public class RegisterActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
+                            Map<String, Object> user = new HashMap<>();
+                            user.put("email", ""+epost+"");
+                            user.put("password", ""+lösen+"");
+
+                            db.collection("users")
+                                    .add(user)
+                                    .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                                        @Override
+                                        public void onSuccess(DocumentReference documentReference) {
+                                        }
+                                    })
+                                    .addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                        }
+                                    });
                             // Sign in success, update UI with the signed-in user's information
                             Toast.makeText(RegisterActivity.this, "Registration successful!.",
                                     Toast.LENGTH_SHORT).show();
