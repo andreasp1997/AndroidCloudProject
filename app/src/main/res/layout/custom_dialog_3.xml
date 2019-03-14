@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:weightSum="2">
+
+    <TimePicker
+        android:id="@+id/time_picker"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:timePickerMode="spinner"
+        >
+
+    </TimePicker>
+
+    <EditText
+        android:id="@+id/info_box"
+        android:inputType="textMultiLine"
+        android:lines="10"
+        android:gravity="top|left"
+        android:backgroundTint="#57BC90"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:scrollbars="vertical"
+        android:hint="Enter your meal information here"
+        android:textColorHint="#B8B8B8"
+    />
+
+</LinearLayout>
