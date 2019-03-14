@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         android:backgroundTint="#57BC90"
         android:inputType="number"
-        android:hint="Weight"
+        android:hint="Weight (kg)"
         android:textColorHint="#B8B8B8"
         />
 
@@ -54,7 +54,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="30dp"
         android:text="---"
-        android:textColor="#B8B8B8"/>
+        android:textColor="#000000"/>
 
     <EditText
         android:id="@+id/edit_calories"
