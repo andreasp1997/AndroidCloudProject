@@ -1,6 +1,7 @@
 package com.example.healthexercise;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -22,6 +23,9 @@ public class LoginActivity extends AppCompatActivity {
     private EditText input_username;
     private EditText input_password;
 
+    private String storedEmail;
+    private String storedPassword;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,6 +42,8 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
+                storedEmail = input_username.getText().toString();
+                storedPassword = input_password.getText().toString();
                 signIn(input_username.getText().toString(),input_password.getText().toString());
             }
         });
@@ -67,6 +73,11 @@ public class LoginActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             FirebaseUser user = mAuth.getCurrentUser();
+
+                            SharedPreferences.Editor editor = getSharedPreferences("USER", MODE_PRIVATE).edit();
+                            editor.putString("email", storedEmail);
+                            editor.putString("password", storedPassword);
+                            editor.apply();
 
                             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
 

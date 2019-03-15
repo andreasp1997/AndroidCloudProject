@@ -2,7 +2,9 @@ package com.example.healthexercise;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -47,6 +49,9 @@ public class HomeFragment extends Fragment implements SensorEventListener, StepL
     private Double neededCalories;
     Thread t1;
 
+    private String storedEmail;
+    private String storedPassword;
+
     private ImageButton editStep;
     private ImageButton editCalories;
 
@@ -54,6 +59,13 @@ public class HomeFragment extends Fragment implements SensorEventListener, StepL
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.home_frag, container, false);
+
+        // Getting account info
+        SharedPreferences info = getActivity().getSharedPreferences("USER", Context.MODE_PRIVATE);
+        storedEmail = info.getString("email", "");
+        storedPassword = info.getString("password", "");
+        Log.d("EMAIL: ", storedEmail);
+        Log.d("PASSWORD", storedPassword);
 
         sensorManager = (SensorManager) getActivity().getSystemService(SENSOR_SERVICE);
         accel = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
