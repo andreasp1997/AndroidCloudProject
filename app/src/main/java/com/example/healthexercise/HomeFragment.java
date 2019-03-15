@@ -33,7 +33,11 @@ import com.github.lzyzsd.circleprogress.ArcProgress;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.ListenerRegistration;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -53,6 +57,7 @@ public class HomeFragment extends Fragment implements SensorEventListener, StepL
     private SensorManager sensorManager;
     private Sensor accel;
     private int numSteps;
+    private String numStepsString;
     private DecimalFormat df;
     private Double neededCalories;
     public static Thread t1;
@@ -82,6 +87,8 @@ public class HomeFragment extends Fragment implements SensorEventListener, StepL
         Log.d("EMAIL: ", storedEmail);
         Log.d("PASSWORD", storedPassword);
 
+        db = FirebaseFirestore.getInstance();
+
         sensorManager = (SensorManager) getActivity().getSystemService(SENSOR_SERVICE);
         accel = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         simpleStepDetector = new StepDetector();
@@ -89,7 +96,7 @@ public class HomeFragment extends Fragment implements SensorEventListener, StepL
 
         sensorManager.registerListener(this, accel, SensorManager.SENSOR_DELAY_FASTEST);
 
-        arcProgress =(ArcProgress)v.findViewById(R.id.distance_progress);
+        arcProgress = (ArcProgress)v.findViewById(R.id.distance_progress);
         arcProgress.setSuffixText("");
 
         editStep = (ImageButton) v.findViewById(R.id.edit_steps_btn);
@@ -114,7 +121,9 @@ public class HomeFragment extends Fragment implements SensorEventListener, StepL
             }
         });
 
-        t1 = new Thread() {
+
+
+        /*t1 = new Thread() {
             public void run() {
                 try {
                     while (!isInterrupted()) {
@@ -122,6 +131,11 @@ public class HomeFragment extends Fragment implements SensorEventListener, StepL
                         getActivity().runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
+
+                                numStepsString = Integer.toString(numSteps);
+
+                                DocumentReference df = db.collection("users").document(storedEmail);
+                                df.update("steps", numStepsString);
 
                                 arcProgress.setText(String.valueOf(numSteps));
                                 arcProgress.setProgress(numSteps);
@@ -135,9 +149,30 @@ public class HomeFragment extends Fragment implements SensorEventListener, StepL
 
         };
 
-        t1.start();
+        t1.start();*/
 
         return v;
+
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        db = FirebaseFirestore.getInstance();
+
+        DocumentReference df = db.collection("users").document(storedEmail);
+
+        df.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@javax.annotation.Nullable DocumentSnapshot documentSnapshot, @javax.annotation.Nullable FirebaseFirestoreException e) {
+
+                if (documentSnapshot.exists()){
+                    String steps = documentSnapshot.getString("steps");
+                }
+
+            }
+        });
 
     }
 
@@ -158,6 +193,16 @@ public class HomeFragment extends Fragment implements SensorEventListener, StepL
     public void step(long timeNS) {
 
         numSteps++;
+
+        numStepsString = Integer.toString(numSteps);
+
+        DocumentReference df = db.collection("users").document(storedEmail);
+        df.update("steps", numStepsString).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+
+            }
+        });
 
     }
 
@@ -328,8 +373,6 @@ public class HomeFragment extends Fragment implements SensorEventListener, StepL
                 dbAge = editAge.getText().toString();
                 dbCaloriesGoal = editCalories.getText().toString();
 
-                db = FirebaseFirestore.getInstance();
-
                 Map<String, Object> user = new HashMap<>();
                 user.put("weight", dbWeight);
                 user.put("height", dbHeight);
@@ -350,8 +393,6 @@ public class HomeFragment extends Fragment implements SensorEventListener, StepL
                     }
                 });
 
-
-
                 Toast.makeText(getActivity(), "Daily step goal updated", Toast.LENGTH_LONG).show();
             }
         });
@@ -364,7 +405,5 @@ public class HomeFragment extends Fragment implements SensorEventListener, StepL
         });
 
         builder.show();
-
-
     }
 }
