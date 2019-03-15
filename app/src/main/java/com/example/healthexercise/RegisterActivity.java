@@ -30,6 +30,7 @@ public class RegisterActivity extends AppCompatActivity {
     private Button registerbutton;
     private String dbEmail;
     private String dbPass;
+    private String documentID;
     FirebaseFirestore db;
 
     FirebaseAuth mAuth;
@@ -50,12 +51,10 @@ public class RegisterActivity extends AppCompatActivity {
             public void onClick(View v) {
                 dbPass = password.getText().toString();
                 dbEmail = email.getText().toString();
+                documentID = dbEmail;
                 createAccount(email.getText().toString(),password.getText().toString());
             }
         });
-
-
-
     }
 
 
@@ -73,19 +72,37 @@ public class RegisterActivity extends AppCompatActivity {
                             Map<String, String> user = new HashMap<>();
                             user.put("email", ""+ dbEmail + "");
                             user.put("password", "" + dbPass + "");
+                            user.put("steps", "");
+                            user.put("stepsgoal", "");
+                            user.put("weight", "");
+                            user.put("height", "");
+                            user.put("age", "");
+                            user.put("calorieintake", "");
+                            user.put("meal1", "");
+                            user.put("meal2", "");
+                            user.put("meal3", "");
+                            user.put("meal4", "");
+                            user.put("meal5", "");
+                            user.put("meal6", "");
+                            user.put("meal7", "");
+                            user.put("meal8", "");
+                            user.put("latitude", "");
+                            user.put("longitude", "");
+                            user.put("distancecover", "");
 
-                            db.collection("users")
-                                    .add(user)
-                                    .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                                        @Override
-                                        public void onSuccess(DocumentReference documentReference) {
-                                        }
-                                    })
-                                    .addOnFailureListener(new OnFailureListener() {
-                                        @Override
-                                        public void onFailure(@NonNull Exception e) {
-                                        }
-                                    });
+
+                            DocumentReference dr = db.collection("users").document(documentID);
+                            dr.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+
+                                }
+                            }).addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+
+                                }
+                            });
                             // Sign in success, update UI with the signed-in user's information
                             Toast.makeText(RegisterActivity.this, "Registration successful!.",
                                     Toast.LENGTH_SHORT).show();

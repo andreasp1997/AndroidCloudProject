@@ -33,7 +33,6 @@ public class LoginActivity extends AppCompatActivity {
 
 
 
-
         final Button loginButton = (Button) findViewById(R.id.btn_login);
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
