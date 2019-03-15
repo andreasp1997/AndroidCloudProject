@@ -30,14 +30,22 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.github.lzyzsd.circleprogress.ArcProgress;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static android.content.Context.SENSOR_SERVICE;
 
 public class HomeFragment extends Fragment implements SensorEventListener, StepListener {
+
+    FirebaseFirestore db;
 
     private ArcProgress arcProgress;
 
@@ -47,10 +55,17 @@ public class HomeFragment extends Fragment implements SensorEventListener, StepL
     private int numSteps;
     private DecimalFormat df;
     private Double neededCalories;
-    Thread t1;
+    public static Thread t1;
 
     private String storedEmail;
     private String storedPassword;
+
+    private String dbWeight;
+    private String dbHeight;
+    private String dbGender;
+    private String dbAge;
+    private String dbCaloriesGoal;
+    private String dbStepsGoal;
 
     private ImageButton editStep;
     private ImageButton editCalories;
@@ -256,6 +271,8 @@ public class HomeFragment extends Fragment implements SensorEventListener, StepL
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
+                dbGender = sItems.getItemAtPosition(position).toString();
+
                 if (editWeight.getText().toString().trim().isEmpty() || editHeight.getText().toString().isEmpty()
                         || editAge.getText().toString().isEmpty()) {
 
@@ -265,6 +282,7 @@ public class HomeFragment extends Fragment implements SensorEventListener, StepL
                 else {
 
                     if (sItems.getSelectedItem().equals("Male")){
+
 
                         neededCalories = 66.4730 + (13.7516 *
                                 Integer.parseInt(editWeight.getText().toString())) +
@@ -276,6 +294,7 @@ public class HomeFragment extends Fragment implements SensorEventListener, StepL
                                 "calories a day to maintain weight");
 
                     } else if (sItems.getSelectedItem().equals("Female")){
+
 
                         neededCalories = 655.0955 + (9.5634 *
                                 Integer.parseInt(editWeight.getText().toString())) +
@@ -303,6 +322,36 @@ public class HomeFragment extends Fragment implements SensorEventListener, StepL
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+
+                dbWeight = editWeight.getText().toString();
+                dbHeight = editHeight.getText().toString();
+                dbAge = editAge.getText().toString();
+                dbCaloriesGoal = editCalories.getText().toString();
+
+                db = FirebaseFirestore.getInstance();
+
+                Map<String, Object> user = new HashMap<>();
+                user.put("weight", dbWeight);
+                user.put("height", dbHeight);
+                user.put("gender", dbGender);
+                user.put("age", dbAge);
+                user.put("stepsgoal", dbCaloriesGoal);
+
+                DocumentReference df = db.collection("users").document(storedEmail);
+                df.update(user).addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+
+                    }
+                });
+
+
+
                 Toast.makeText(getActivity(), "Daily step goal updated", Toast.LENGTH_LONG).show();
             }
         });

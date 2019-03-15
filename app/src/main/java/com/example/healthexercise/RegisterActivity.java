@@ -77,6 +77,7 @@ public class RegisterActivity extends AppCompatActivity {
                             user.put("weight", "");
                             user.put("height", "");
                             user.put("age", "");
+                            user.put("gender", "");
                             user.put("calorieintake", "");
                             user.put("meal1", "");
                             user.put("meal2", "");

@@ -61,7 +61,7 @@ public class ExerciseFragment extends Fragment implements OnMapReadyCallback, Lo
     Marker marker;
     boolean exerciseStarted;
 
-    Thread t1;
+    public static Thread t1;
 
     private ArrayList<LatLng> points;
 
