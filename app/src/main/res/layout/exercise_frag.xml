@@ -45,16 +45,39 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content">
 
+                <LinearLayout
+                    android:layout_margin="16dp"
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
                     <android.support.v7.widget.AppCompatButton
                         android:id="@+id/start_exercise_btn"
                         android:layout_width="fill_parent"
                         android:layout_height="48dp"
                         android:layout_marginTop="24dp"
+                        android:layout_gravity="left"
+                        android:layout_weight="1"
                         android:layout_marginBottom="24dp"
                         android:background="@drawable/start_exercise_btn"
                         android:padding="12dp"
-                        android:text=""
+                        android:text="Start"
                         android:textColor="#FFFFFF" />
+
+                    <android.support.v7.widget.AppCompatButton
+                        android:id="@+id/stop_exercise_btn"
+                        android:layout_width="fill_parent"
+                        android:layout_height="48dp"
+                        android:layout_marginTop="24dp"
+                        android:layout_gravity="right"
+                        android:layout_weight="1"
+                        android:layout_marginBottom="24dp"
+                        android:background="@drawable/stop_exercise_btn"
+                        android:padding="12dp"
+                        android:text="Stop"
+                        android:textColor="#FFFFFF" />
+
+                </LinearLayout>
 
                     <TextView
                         android:id="@+id/text_distance"

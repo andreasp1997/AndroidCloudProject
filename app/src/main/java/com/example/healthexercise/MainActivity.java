@@ -86,8 +86,6 @@ public class MainActivity extends AppCompatActivity {
             editor.apply();
 
             Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-            HomeFragment.t1.interrupt();
-            ExerciseFragment.t1.interrupt();
             finish();
             startActivity(intent);
         }

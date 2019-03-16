@@ -154,7 +154,12 @@ public class HomeFragment extends Fragment implements SensorEventListener, StepL
                         });
                     }
 
-                    // calculate percentage to steps goal
+                    // calculate percentage to steps goal if percent is less than 100
+
+                    if (numSteps > Integer.parseInt(dbStepsGoal)){
+                        percent = 100;
+                    }
+
                     if (percent != 100){
                         percent = numSteps * 100f / stepsGoalNum;
                     }

@@ -2,7 +2,9 @@ package com.example.healthexercise;
 
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Criteria;
@@ -41,27 +43,50 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.maps.android.SphericalUtil;
 
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 
 public class ExerciseFragment extends Fragment implements OnMapReadyCallback, LocationListener {
 
+    FirebaseFirestore db;
+    DocumentReference documentReference;
+
     public GoogleMap mMap;
 
-    double latitude;
-    double longitude;
-    double distance;
+    private String storedEmail;
+    private String storedPassword;
+
+    private double latitude;
+    private String latitudeString;
+    private double longitude;
+    private String longitudeString;
+    private double distance;
+    private String distanceString;
     DecimalFormat df;
+
+    private String dbLat;
+    private String dbLng;
+    private String dbDistance;
 
     TextView distanceMoved;
 
     Marker marker;
     boolean exerciseStarted;
-
-    public static Thread t1;
 
     private ArrayList<LatLng> points;
 
@@ -72,64 +97,93 @@ public class ExerciseFragment extends Fragment implements OnMapReadyCallback, Lo
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.exercise_frag, container, false);
 
+        // Getting account info
+        SharedPreferences info = getActivity().getSharedPreferences("USER", Context.MODE_PRIVATE);
+        storedEmail = info.getString("email", "");
+        storedPassword = info.getString("password", "");
+        Log.d("EMAIL: ", storedEmail);
+        Log.d("PASSWORD", storedPassword);
+
+        // init database + doc reference
+        db = FirebaseFirestore.getInstance();
+        documentReference = db.collection("users").document(storedEmail);
+
         // reference to textview displaying how far the user has walked/jogged (meters)
         distanceMoved = v.findViewById(R.id.text_distance);
+
         // average double to only show 3 decimals
         df = new DecimalFormat("###.###");
 
-        // arraylist containing
+        // arraylist containing lat,lng
         points = new ArrayList<LatLng>();
 
         // reference to mapFragment
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        // button for starting exercise. Exercise starts/ends when user presses button
-        final Button exerciseBtn = (Button) v.findViewById(R.id.start_exercise_btn);
-        exerciseBtn.setOnClickListener(new View.OnClickListener() {
+        // buttons for starting/stopping exercise. Exercise starts/ends when user presses button
+        final Button startExerciseBtn = (Button) v.findViewById(R.id.start_exercise_btn);
+        final Button stopExerciseBtn = (Button) v.findViewById(R.id.stop_exercise_btn);
+
+        if(exerciseStarted){
+            startExerciseBtn.setBackgroundColor(Color.parseColor("#888888"));
+            startExerciseBtn.setEnabled(false);
+        } else {
+            stopExerciseBtn.setBackgroundColor(Color.parseColor("#888888"));
+            stopExerciseBtn.setEnabled(false);
+        }
+
+        startExerciseBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (exerciseStarted == true){
-                    exerciseStarted = false;
-                    mMap.clear();
-                    points.clear();
-                } else if (exerciseStarted == false){
-                    exerciseStarted = true;
-                }
+                exerciseStarted = true;
+
+                startExerciseBtn.setBackgroundColor(Color.parseColor("#888888"));
+                stopExerciseBtn.setBackgroundColor(Color.parseColor("#C50000"));
+                startExerciseBtn.setEnabled(false);
+                stopExerciseBtn.setEnabled(true);
+                distanceMoved.setText("0");
             }
         });
 
-        // thread checking if exercise is on or off. Updates button state and distance
-        t1 = new Thread() {
-            public void run() {
-                try {
-                    while (!isInterrupted()) {
-                        Thread.sleep(100);
-                        getActivity().runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
 
-                                if (exerciseStarted == true){
-                                    exerciseBtn.setText("Stop Exercise");
-                                    exerciseBtn.setBackgroundColor(Color.parseColor("#C50000"));
-                                    distanceMoved.setText(df.format(distance) + " meter(s)");
-                                } else if (exerciseStarted == false){
-                                    exerciseBtn.setText("Start Exercise");
-                                    exerciseBtn.setBackgroundColor(Color.parseColor("#57BC90"));
-                                }
+        stopExerciseBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                exerciseStarted = false;
 
-                            }
-                        });//runOnUiThread ends here
-                    }//While ends here
-                } catch (InterruptedException e) {
-                }//Catch ends here
+                mMap.clear();
+                points.clear();
+
+                stopExerciseBtn.setBackgroundColor(Color.parseColor("#888888"));
+                startExerciseBtn.setBackgroundColor(Color.parseColor("#57BC90"));
+                startExerciseBtn.setEnabled(true);
+                stopExerciseBtn.setEnabled(false);
             }
-
-        };
-
-        t1.start();
+        });
 
         return v;
+    }
+
+    // Method contains snapshot listener for getting updated info from database
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        documentReference.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@javax.annotation.Nullable DocumentSnapshot documentSnapshot, @javax.annotation.Nullable FirebaseFirestoreException e) {
+
+                if (documentSnapshot.exists()) {
+
+                    dbDistance = documentSnapshot.getString("distancecover");
+
+                    distanceMoved.setText("Distance covered (meters): " + dbDistance);
+
+                }
+            }
+
+        });
     }
 
     // method starting googleMap.
@@ -189,12 +243,33 @@ public class ExerciseFragment extends Fragment implements OnMapReadyCallback, Lo
         latitude = location.getLatitude();
         longitude = location.getLongitude();
 
+        latitudeString = String.valueOf(latitude);
+        longitudeString = String.valueOf(longitude);
+
         LatLng latLng = new LatLng(latitude, longitude);
 
         if (exerciseStarted){
 
             points.add(latLng);
             distance = SphericalUtil.computeLength(points);
+            distanceString = df.format(distance);
+
+            Map<String, Object> user = new HashMap<>();
+            user.put("latitude", latitudeString);
+            user.put("longitude", longitudeString);
+            user.put("distancecover", distanceString);
+
+            documentReference.update(user).addOnSuccessListener(new OnSuccessListener<Void>() {
+                @Override
+                public void onSuccess(Void aVoid) {
+
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+
+                }
+            });
 
             if (marker!=null){
                 marker.remove();
