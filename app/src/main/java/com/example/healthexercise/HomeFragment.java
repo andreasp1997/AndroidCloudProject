@@ -50,13 +50,21 @@ import static android.content.Context.SENSOR_SERVICE;
 public class HomeFragment extends Fragment implements SensorEventListener, StepListener {
 
     FirebaseFirestore db;
+    DocumentReference documentReference;
 
     private ArcProgress arcProgress;
+    private TextView weightInfo;
+    private TextView heightInfo;
+    private TextView genderInfo;
+    private TextView ageInfo;
+    private TextView calorieIntakeInfo;
 
     private StepDetector simpleStepDetector;
     private SensorManager sensorManager;
     private Sensor accel;
     private int numSteps;
+    private int stepsGoalNum;
+    private float percent;
     private String numStepsString;
     private DecimalFormat df;
     private Double neededCalories;
@@ -87,18 +95,65 @@ public class HomeFragment extends Fragment implements SensorEventListener, StepL
         Log.d("EMAIL: ", storedEmail);
         Log.d("PASSWORD", storedPassword);
 
-        db = FirebaseFirestore.getInstance();
+        // Textviews for fragment
+        weightInfo = (TextView) v.findViewById(R.id.textWeightVal);
+        heightInfo = (TextView) v.findViewById(R.id.textHeightVal);
+        genderInfo = (TextView) v.findViewById(R.id.textGenderVal);
+        ageInfo = (TextView) v.findViewById(R.id.textAgeVal);
+        calorieIntakeInfo = (TextView) v.findViewById(R.id.textCalVal);
 
+        //Progress bar
+        arcProgress = (ArcProgress)v.findViewById(R.id.distance_progress);
+        arcProgress.setSuffixText("");
+
+        // Get database instance and document reference for user data
+        db = FirebaseFirestore.getInstance();
+        documentReference = db.collection("users").document(storedEmail);
+
+        // Load initial data from database
+        documentReference.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                if (documentSnapshot.exists()) {
+                    numStepsString = documentSnapshot.getString("steps");
+                    numSteps = Integer.parseInt(numStepsString);
+                    dbWeight = documentSnapshot.getString("weight");
+                    dbHeight = documentSnapshot.getString("height");
+                    dbGender = documentSnapshot.getString("gender");
+                    dbAge = documentSnapshot.getString("age");
+                    dbCaloriesGoal = documentSnapshot.getString("calorieintake");
+                    dbStepsGoal = documentSnapshot.getString("stepsgoal");
+                    stepsGoalNum = Integer.parseInt(dbStepsGoal);
+
+                    // calculate percentage to steps goal
+                    if (percent != 100){
+                        // Calculate percentage to steps goal
+                        percent = numSteps * 100f / stepsGoalNum;
+                    }
+
+                    arcProgress.setText(numStepsString);
+                    arcProgress.setBottomText(dbStepsGoal);
+                    arcProgress.setProgress(percent);
+
+                    weightInfo.setText(dbWeight);
+                    heightInfo.setText(dbHeight);
+                    genderInfo.setText(dbGender);
+                    ageInfo.setText(dbAge);
+                    calorieIntakeInfo.setText(dbCaloriesGoal);
+
+                }
+            }
+        });
+
+        //Create step detector sensor
         sensorManager = (SensorManager) getActivity().getSystemService(SENSOR_SERVICE);
         accel = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         simpleStepDetector = new StepDetector();
         simpleStepDetector.registerListener(this);
-
         sensorManager.registerListener(this, accel, SensorManager.SENSOR_DELAY_FASTEST);
 
-        arcProgress = (ArcProgress)v.findViewById(R.id.distance_progress);
-        arcProgress.setSuffixText("");
 
+        // Button for setting daily steps goal
         editStep = (ImageButton) v.findViewById(R.id.edit_steps_btn);
         editStep.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -111,6 +166,7 @@ public class HomeFragment extends Fragment implements SensorEventListener, StepL
             }
         });
 
+        // button for calculating daily calorie intake
         editCalories = (ImageButton) v.findViewById(R.id.edit_calories_btn);
         editCalories.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -121,54 +177,47 @@ public class HomeFragment extends Fragment implements SensorEventListener, StepL
             }
         });
 
-
-
-        /*t1 = new Thread() {
-            public void run() {
-                try {
-                    while (!isInterrupted()) {
-                        Thread.sleep(1000);
-                        getActivity().runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-
-                                numStepsString = Integer.toString(numSteps);
-
-                                DocumentReference df = db.collection("users").document(storedEmail);
-                                df.update("steps", numStepsString);
-
-                                arcProgress.setText(String.valueOf(numSteps));
-                                arcProgress.setProgress(numSteps);
-
-                            }
-                        });//runOnUiThread ends here
-                    }//While ends here
-                } catch (InterruptedException e) {
-                }//Catch ends here
-            }
-
-        };
-
-        t1.start();*/
-
         return v;
 
     }
 
+    // Method contains snapshot listener for getting updated info from database
     @Override
     public void onStart() {
         super.onStart();
 
-        db = FirebaseFirestore.getInstance();
-
-        DocumentReference df = db.collection("users").document(storedEmail);
-
-        df.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+        documentReference.addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@javax.annotation.Nullable DocumentSnapshot documentSnapshot, @javax.annotation.Nullable FirebaseFirestoreException e) {
 
                 if (documentSnapshot.exists()){
-                    String steps = documentSnapshot.getString("steps");
+
+                    numStepsString = documentSnapshot.getString("steps");
+                    numSteps = Integer.parseInt(numStepsString);
+                    dbWeight = documentSnapshot.getString("weight");
+                    dbHeight = documentSnapshot.getString("height");
+                    dbGender = documentSnapshot.getString("gender");
+                    dbAge = documentSnapshot.getString("age");
+                    dbCaloriesGoal = documentSnapshot.getString("calorieintake");
+                    dbStepsGoal = documentSnapshot.getString("stepsgoal");
+                    stepsGoalNum = Integer.parseInt(dbStepsGoal);
+
+                    if (percent != 100){
+                        // Calculate percentage to steps goal
+                        percent = numSteps * 100f / stepsGoalNum;
+                    }
+
+
+                    arcProgress.setText(numStepsString);
+                    arcProgress.setBottomText(dbStepsGoal);
+                    arcProgress.setProgress(percent);
+
+                    weightInfo.setText(dbWeight);
+                    heightInfo.setText(dbHeight);
+                    genderInfo.setText(dbGender);
+                    ageInfo.setText(dbAge);
+                    calorieIntakeInfo.setText(dbCaloriesGoal);
+
                 }
 
             }
@@ -176,6 +225,7 @@ public class HomeFragment extends Fragment implements SensorEventListener, StepL
 
     }
 
+    // used when detecting step detector sensor change
     @Override
     public void onSensorChanged(SensorEvent event) {
 
@@ -186,9 +236,11 @@ public class HomeFragment extends Fragment implements SensorEventListener, StepL
 
     }
 
+    // Sensor accuracy method
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) { }
 
+    // updating steps when step detector sensor changed
     @Override
     public void step(long timeNS) {
 
@@ -196,8 +248,7 @@ public class HomeFragment extends Fragment implements SensorEventListener, StepL
 
         numStepsString = Integer.toString(numSteps);
 
-        DocumentReference df = db.collection("users").document(storedEmail);
-        df.update("steps", numStepsString).addOnSuccessListener(new OnSuccessListener<Void>() {
+        documentReference.update("steps", numStepsString).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
 
@@ -206,10 +257,11 @@ public class HomeFragment extends Fragment implements SensorEventListener, StepL
 
     }
 
+    // Method creates dialog for changing daily steps goal
     private void openDialogSteps(){
         LayoutInflater inflater = LayoutInflater.from(getActivity());
         View subView = inflater.inflate(R.layout.custom_dialog, null);
-        final EditText subEditText = (EditText)subView.findViewById(R.id.dialogEditText);
+        final EditText stepsGoalText = (EditText)subView.findViewById(R.id.dialogEditText);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.MyDialogTheme);
         builder.setTitle("Enter Steps");
@@ -220,6 +272,18 @@ public class HomeFragment extends Fragment implements SensorEventListener, StepL
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+
+                dbStepsGoal = stepsGoalText.getText().toString();
+
+                percent = 0;
+
+                documentReference.update("stepsgoal", dbStepsGoal).addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+
+                    }
+                });
+
                 Toast.makeText(getActivity(), "Daily step goal updated", Toast.LENGTH_LONG).show();
             }
         });
@@ -234,6 +298,7 @@ public class HomeFragment extends Fragment implements SensorEventListener, StepL
         builder.show();
     }
 
+    // Method contains dialog for calculating and entering calorie intake
     private void openDialogCalories(){
         LayoutInflater inflater = LayoutInflater.from(getActivity());
 
@@ -272,6 +337,7 @@ public class HomeFragment extends Fragment implements SensorEventListener, StepL
 
             }
 
+            // Calculate calorie intake for changes in textfields
             @Override
             public void afterTextChanged(Editable s) {
 
@@ -312,6 +378,7 @@ public class HomeFragment extends Fragment implements SensorEventListener, StepL
         editAge.addTextChangedListener(textWatcher);
         editHeight.addTextChangedListener(textWatcher);
 
+        // Calculate calorie intake for changes in spinner
         sItems.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -378,10 +445,9 @@ public class HomeFragment extends Fragment implements SensorEventListener, StepL
                 user.put("height", dbHeight);
                 user.put("gender", dbGender);
                 user.put("age", dbAge);
-                user.put("stepsgoal", dbCaloriesGoal);
+                user.put("calorieintake", dbCaloriesGoal);
 
-                DocumentReference df = db.collection("users").document(storedEmail);
-                df.update(user).addOnSuccessListener(new OnSuccessListener<Void>() {
+                documentReference.update(user).addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
 
