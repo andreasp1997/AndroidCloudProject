@@ -9,7 +9,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
-
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -20,6 +19,9 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -31,8 +33,9 @@ public class RegisterActivity extends AppCompatActivity {
     private String dbEmail;
     private String dbPass;
     private String documentID;
-    FirebaseFirestore db;
+    private String monthDay;
 
+    FirebaseFirestore db;
     FirebaseAuth mAuth;
 
     @Override
@@ -64,6 +67,10 @@ public class RegisterActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
 
+        Date date = Calendar.getInstance().getTime();
+
+        monthDay = new SimpleDateFormat("yyyy-MM-dd").format(date);
+
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
@@ -72,8 +79,8 @@ public class RegisterActivity extends AppCompatActivity {
                             Map<String, String> user = new HashMap<>();
                             user.put("email", ""+ dbEmail + "");
                             user.put("password", "" + dbPass + "");
-                            user.put("steps", "");
-                            user.put("stepsgoal", "");
+                            user.put("steps", "0");
+                            user.put("stepsgoal", "100");
                             user.put("weight", "");
                             user.put("height", "");
                             user.put("age", "");
@@ -90,6 +97,7 @@ public class RegisterActivity extends AppCompatActivity {
                             user.put("latitude", "");
                             user.put("longitude", "");
                             user.put("distancecover", "");
+                            user.put("stepcounterdate", monthDay);
 
 
                             DocumentReference dr = db.collection("users").document(documentID);

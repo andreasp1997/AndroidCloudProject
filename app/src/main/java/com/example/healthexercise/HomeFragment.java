@@ -40,7 +40,10 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.ListenerRegistration;
 
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -64,6 +67,7 @@ public class HomeFragment extends Fragment implements SensorEventListener, StepL
     private Sensor accel;
     private int numSteps;
     private int stepsGoalNum;
+    private String monthDay;
     private float percent;
     private String numStepsString;
     private DecimalFormat df;
@@ -79,6 +83,7 @@ public class HomeFragment extends Fragment implements SensorEventListener, StepL
     private String dbAge;
     private String dbCaloriesGoal;
     private String dbStepsGoal;
+    private String dbDate;
 
     private ImageButton editStep;
     private ImageButton editCalories;
@@ -123,11 +128,34 @@ public class HomeFragment extends Fragment implements SensorEventListener, StepL
                     dbAge = documentSnapshot.getString("age");
                     dbCaloriesGoal = documentSnapshot.getString("calorieintake");
                     dbStepsGoal = documentSnapshot.getString("stepsgoal");
+                    dbDate = documentSnapshot.getString("stepcounterdate");
                     stepsGoalNum = Integer.parseInt(dbStepsGoal);
+
+                    Date date = Calendar.getInstance().getTime();
+
+                    monthDay = new SimpleDateFormat("yyyy-MM-dd").format(date);
+
+                    // Update date and reset steps if new day
+                    if (!monthDay.equals(dbDate)){
+                        Map<String, Object> user = new HashMap<>();
+                        user.put("steps", "0");
+                        user.put("stepcounterdate", monthDay);
+
+                        documentReference.update(user).addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+
+                            }
+                        });
+                    }
 
                     // calculate percentage to steps goal
                     if (percent != 100){
-                        // Calculate percentage to steps goal
                         percent = numSteps * 100f / stepsGoalNum;
                     }
 
@@ -200,7 +228,31 @@ public class HomeFragment extends Fragment implements SensorEventListener, StepL
                     dbAge = documentSnapshot.getString("age");
                     dbCaloriesGoal = documentSnapshot.getString("calorieintake");
                     dbStepsGoal = documentSnapshot.getString("stepsgoal");
+                    dbDate = documentSnapshot.getString("stepcounterdate");
                     stepsGoalNum = Integer.parseInt(dbStepsGoal);
+
+                    Date date = Calendar.getInstance().getTime();
+
+                    monthDay = new SimpleDateFormat("yyyy-MM-dd").format(date);
+
+                    // Update date and reset steps if new day
+                    if (!monthDay.equals(dbDate)){
+                        Map<String, Object> user = new HashMap<>();
+                        user.put("steps", "0");
+                        user.put("stepcounterdate", monthDay);
+
+                        documentReference.update(user).addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+
+                            }
+                        });
+                    }
 
                     if (percent != 100){
                         // Calculate percentage to steps goal
