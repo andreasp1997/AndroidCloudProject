@@ -21,7 +21,13 @@
         android:id="@+id/map_toggle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="173dp"
+        android:layout_marginLeft="173dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginEnd="172dp"
+        android:layout_marginRight="172dp"
         android:text="Map"
-        tools:layout_editor_absoluteX="172dp"
-        tools:layout_editor_absoluteY="164dp" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/steps_toggle" />
 </android.support.constraint.ConstraintLayout>
