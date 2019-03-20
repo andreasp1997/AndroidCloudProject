@@ -23,7 +23,6 @@ import java.util.List;
 public class DietFragment extends Fragment {
 
     ListView listView;
-    FloatingActionButton addBtn;
 
 
     @Nullable
@@ -33,22 +32,16 @@ public class DietFragment extends Fragment {
 
         listView = (ListView) v.findViewById(R.id.list);
 
-        addBtn = v.findViewById(R.id.floatingActionButton);
-        addBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                openDialogDiet();
-            }
-        });
-
         String[] days = new String[] {
-                "Monday",
-                "Tuesday",
-                "Wednesday",
-                "Thursday",
-                "Friday",
-                "Saturday",
-                "Sunday"
+                "1: ",
+                "2: ",
+                "3: ",
+                "4: ",
+                "5: ",
+                "6:",
+                "7: ",
+                "8: "
+
         };
 
         final List<String> days_list = new ArrayList<String>(Arrays.asList(days));
