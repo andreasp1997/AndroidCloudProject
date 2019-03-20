@@ -6,4 +6,7 @@
         android:title="Log out"
         android:orderInCategory="100"
         app:showAsAction="never" />
+    <item
+        android:id="@+id/action_settings"
+        android:title="Settings" />
 </menu>

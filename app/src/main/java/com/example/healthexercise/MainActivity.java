@@ -1,28 +1,25 @@
 package com.example.healthexercise;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.support.annotation.MainThread;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
+import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.TabLayout;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-
+import android.widget.Switch;
 import android.widget.TextView;
-
-import com.example.healthexercise.R;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -88,6 +85,51 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(MainActivity.this, LoginActivity.class);
             finish();
             startActivity(intent);
+        }
+
+
+        if (id == R.id.action_settings) {
+            LayoutInflater inflater = LayoutInflater.from(this);
+            View subView = inflater.inflate(R.layout.settings_dialog, null);
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.MyDialogTheme);
+            builder.setTitle("Settings");
+            builder.setMessage("Here you can Enable/Disable the step and map function");
+            builder.setView(subView);
+            AlertDialog alertDialog = builder.create();
+
+            builder.setPositiveButton("Save", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    Switch mapswitch = (Switch) findViewById(R.id.map_toggle);
+                    Switch stepswitch = (Switch) findViewById(R.id.steps_toggle);
+
+
+                    SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
+                    Boolean ismap = prefs.getBoolean("maptoggle",true);
+                    Boolean issteps = prefs.getBoolean("steptoggle",true);
+
+
+                    mapswitch.setChecked(ismap);
+                    stepswitch.setChecked(issteps);
+
+                    Boolean maptoggle = prefs.edit().putBoolean("maptoggle", mapswitch.isActivated()).commit();
+                    Boolean steptoggle = prefs.edit().putBoolean("steptoggle", stepswitch.isActivated()).commit();
+
+
+
+                }
+            });
+
+            builder.setNegativeButton("Exit", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+
+                }
+            });
+
+            builder.show();
+
         }
 
         return super.onOptionsItemSelected(item);
