@@ -10,12 +10,17 @@
         android:id="@+id/steps_toggle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="169dp"
+        android:layout_marginLeft="169dp"
+        android:layout_marginTop="30dp"
         android:layout_marginEnd="168dp"
         android:layout_marginRight="168dp"
         android:layout_marginBottom="30dp"
         android:text="Steps"
         app:layout_constraintBottom_toTopOf="@+id/map_toggle"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Switch
         android:id="@+id/map_toggle"
@@ -26,7 +31,9 @@
         android:layout_marginTop="30dp"
         android:layout_marginEnd="172dp"
         android:layout_marginRight="172dp"
+        android:layout_marginBottom="30dp"
         android:text="Map"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/steps_toggle" />
