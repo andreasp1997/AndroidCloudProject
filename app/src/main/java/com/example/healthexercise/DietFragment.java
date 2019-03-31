@@ -493,7 +493,7 @@ public class DietFragment extends Fragment {
 
                     ArrayList<String> result = data
                             .getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
-                    infoBox.setText(infoBox.getText() + " " + result.get(0));
+                    infoBox.setText(infoBox.getText() + ". " + result.get(0));
                 }
                 break;
             }
