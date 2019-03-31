@@ -1,10 +1,13 @@
 package com.example.healthexercise;
 
 import android.app.AlertDialog;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.speech.RecognizerIntent;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -15,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TimePicker;
@@ -35,12 +39,19 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+
+import static android.app.Activity.RESULT_OK;
 
 public class DietFragment extends Fragment {
 
     FirebaseFirestore db;
     DocumentReference documentReference;
+
+    private final int REQ_CODE_SPEECH_INPUT = 100;
+    static Button voiceBtn;
+    static EditText infoBox;
 
     ListView listView;
     int pos;
@@ -215,12 +226,32 @@ public class DietFragment extends Fragment {
         View subView = inflater.inflate(R.layout.custom_dialog_3, null);
         final TimePicker timePicker = subView.findViewById(R.id.time_picker);
         timePicker.setIs24HourView(true);
-        final EditText infoBox = (EditText)subView.findViewById(R.id.info_box);
+        infoBox = (EditText)subView.findViewById(R.id.info_box);
+        voiceBtn = (Button)subView.findViewById(R.id.btn_voice);
+        voiceBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+                intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+                        RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+                intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
+                intent.putExtra(RecognizerIntent.EXTRA_PROMPT,
+                        "Hi speak something");
+                try {
+                    startActivityForResult(intent, REQ_CODE_SPEECH_INPUT);
+                } catch (ActivityNotFoundException a) {
+
+                }
+            }
+        });
+
+
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.MyDialogTheme);
         builder.setTitle("Enter Meal For Diet");
         builder.setView(subView);
         AlertDialog alertDialog = builder.create();
+
 
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
@@ -360,6 +391,7 @@ public class DietFragment extends Fragment {
         });
 
         builder.show();
+
     }
 
     private void openDialogViewDiet(){
@@ -449,5 +481,23 @@ public class DietFragment extends Fragment {
         });
 
         builder.show();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        switch (requestCode) {
+            case REQ_CODE_SPEECH_INPUT: {
+                if (resultCode == RESULT_OK && null != data) {
+
+                    ArrayList<String> result = data
+                            .getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+                    infoBox.setText(infoBox.getText() + " " + result.get(0));
+                }
+                break;
+            }
+
+        }
     }
 }
