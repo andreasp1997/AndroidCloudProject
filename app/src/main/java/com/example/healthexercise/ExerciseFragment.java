@@ -17,6 +17,7 @@ import android.location.LocationManager;
 
 import android.os.Bundle;
 
+import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -68,8 +69,13 @@ public class ExerciseFragment extends Fragment implements OnMapReadyCallback, Lo
 
     public GoogleMap mMap;
 
+    static Button startExerciseBtn;
+    static Button stopExerciseBtn;
+
     private String storedEmail;
     private String storedPassword;
+    private String maptoggle;
+    private SharedPreferences.OnSharedPreferenceChangeListener prefListener;
 
     private double latitude;
     private String latitudeString;
@@ -104,6 +110,8 @@ public class ExerciseFragment extends Fragment implements OnMapReadyCallback, Lo
         Log.d("EMAIL: ", storedEmail);
         Log.d("PASSWORD", storedPassword);
 
+
+
         // init database + doc reference
         db = FirebaseFirestore.getInstance();
         documentReference = db.collection("users").document(storedEmail);
@@ -122,8 +130,8 @@ public class ExerciseFragment extends Fragment implements OnMapReadyCallback, Lo
         mapFragment.getMapAsync(this);
 
         // buttons for starting/stopping exercise. Exercise starts/ends when user presses button
-        final Button startExerciseBtn = (Button) v.findViewById(R.id.start_exercise_btn);
-        final Button stopExerciseBtn = (Button) v.findViewById(R.id.stop_exercise_btn);
+        startExerciseBtn = (Button) v.findViewById(R.id.start_exercise_btn);
+        stopExerciseBtn = (Button) v.findViewById(R.id.stop_exercise_btn);
 
         if(exerciseStarted){
             startExerciseBtn.setBackgroundColor(Color.parseColor("#888888"));

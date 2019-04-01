@@ -76,6 +76,8 @@ public class HomeFragment extends Fragment implements SensorEventListener, StepL
 
     private String storedEmail;
     private String storedPassword;
+    private String mapToggle;
+    private String stepToggle;
 
     private String dbWeight;
     private String dbHeight;
@@ -301,7 +303,12 @@ public class HomeFragment extends Fragment implements SensorEventListener, StepL
     @Override
     public void step(long timeNS) {
 
-        numSteps++;
+        SharedPreferences stepToggleInfo = getActivity().getSharedPreferences("USER", Context.MODE_PRIVATE);
+        stepToggle = stepToggleInfo.getString("steptoggle", "");
+
+        if (stepToggle.equals("On")){
+            numSteps++;
+        }
 
         numStepsString = Integer.toString(numSteps);
 

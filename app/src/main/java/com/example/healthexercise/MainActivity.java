@@ -1,9 +1,11 @@
 package com.example.healthexercise;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.TabLayout;
@@ -18,6 +20,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.TextView;
 
@@ -37,6 +40,9 @@ public class MainActivity extends AppCompatActivity {
      * The {@link ViewPager} that will host the section contents.
      */
     private ViewPager mViewPager;
+
+    private String mapToggle;
+    private String stepToggle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,25 +104,70 @@ public class MainActivity extends AppCompatActivity {
             builder.setView(subView);
             AlertDialog alertDialog = builder.create();
 
+            SharedPreferences info = getSharedPreferences("USER", Context.MODE_PRIVATE);
+            mapToggle = info.getString("maptoggle", "");
+            stepToggle = info.getString("steptoggle", "");
+
+            Switch mapswitch = (Switch) subView.findViewById(R.id.map_toggle);
+            Switch stepswitch = (Switch) subView.findViewById(R.id.steps_toggle);
+
+            if (mapToggle.equals("On")){
+                mapswitch.setChecked(true);
+            } else if (mapToggle.equals("Off")){
+                mapswitch.setChecked(false);
+            }
+
+            if (stepToggle.equals("On")){
+                stepswitch.setChecked(true);
+            } else if (stepToggle.equals("Off")){
+                stepswitch.setChecked(false);
+            }
+
+            stepswitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    if (isChecked){
+                        stepToggle = "On";
+                    } else {
+                        stepToggle = "Off";
+                    }
+                }
+            });
+
+            mapswitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    if (isChecked){
+                        mapToggle = "On";
+                    } else {
+                        mapToggle = "Off";
+                    }
+                }
+            });
+
             builder.setPositiveButton("Save", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    Switch mapswitch = (Switch) findViewById(R.id.map_toggle);
-                    Switch stepswitch = (Switch) findViewById(R.id.steps_toggle);
 
+                    SharedPreferences.Editor editor = getSharedPreferences("USER", MODE_PRIVATE).edit();
 
-                    SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
-                    Boolean ismap = prefs.getBoolean("maptoggle",true);
-                    Boolean issteps = prefs.getBoolean("steptoggle",true);
+                    if (mapToggle.equals("On")){
+                        editor.putString("maptoggle", "On");
+                        ExerciseFragment.startExerciseBtn.setEnabled(true);
+                        ExerciseFragment.startExerciseBtn.setBackgroundColor(Color.parseColor("#57BC90"));
+                    } else if (mapToggle.equals("Off")){
+                        editor.putString("maptoggle", "Off");
+                        ExerciseFragment.startExerciseBtn.setEnabled(false);
+                        ExerciseFragment.startExerciseBtn.setBackgroundColor(Color.parseColor("#888888"));
+                    }
 
+                    if (stepToggle.equals("On")){
+                        editor.putString("steptoggle", "On");
+                    } else if (stepToggle.equals("Off")){
+                        editor.putString("steptoggle", "Off");
+                    }
 
-                    mapswitch.setChecked(ismap);
-                    stepswitch.setChecked(issteps);
-
-                    Boolean maptoggle = prefs.edit().putBoolean("maptoggle", mapswitch.isActivated()).commit();
-                    Boolean steptoggle = prefs.edit().putBoolean("steptoggle", stepswitch.isActivated()).commit();
-
-
+                    editor.apply();
 
                 }
             });

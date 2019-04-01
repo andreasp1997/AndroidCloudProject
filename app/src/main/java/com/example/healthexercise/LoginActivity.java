@@ -81,6 +81,8 @@ public class LoginActivity extends AppCompatActivity {
                             SharedPreferences.Editor editor = getSharedPreferences("USER", MODE_PRIVATE).edit();
                             editor.putString("email", storedEmail);
                             editor.putString("password", storedPassword);
+                            editor.putString("maptoggle", "On");
+                            editor.putString("steptoggle", "On");
                             editor.apply();
 
                             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
