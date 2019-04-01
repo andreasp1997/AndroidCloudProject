@@ -94,6 +94,8 @@ public class RegisterActivity extends AppCompatActivity {
                             user.put("meal6", "");
                             user.put("meal7", "");
                             user.put("meal8", "");
+                            user.put("latlist", "");
+                            user.put("lonlist", "");
                             user.put("latitude", "");
                             user.put("longitude", "");
                             user.put("distancecover", "");

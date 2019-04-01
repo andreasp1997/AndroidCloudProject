@@ -83,6 +83,12 @@ public class ExerciseFragment extends Fragment implements OnMapReadyCallback, Lo
     private String longitudeString;
     private double distance;
     private String distanceString;
+
+    private ArrayList <String> latList;
+    private ArrayList<String> lonList;
+    private String latListText;
+    private String lonListText;
+
     DecimalFormat df;
 
     private String dbLat;
@@ -124,6 +130,8 @@ public class ExerciseFragment extends Fragment implements OnMapReadyCallback, Lo
 
         // arraylist containing lat,lng
         points = new ArrayList<LatLng>();
+        latList = new ArrayList<String>();
+        lonList = new ArrayList<String>();
 
         // reference to mapFragment
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
@@ -258,6 +266,27 @@ public class ExerciseFragment extends Fragment implements OnMapReadyCallback, Lo
 
         if (exerciseStarted){
 
+            latList.add(String.valueOf(latitude));
+            lonList.add(String.valueOf(longitude));
+
+            if (latList.size() == 25){
+                latList.clear();
+                latListText = "";
+            }
+
+            if (lonList.size() == 25){
+                lonList.clear();
+                lonListText = "";
+            }
+
+            for (String object: latList){
+                latListText = latListText + ", " +  object;
+            }
+
+            for (String object: lonList){
+                lonListText = lonListText + ", " + object;
+            }
+
             points.add(latLng);
             distance = SphericalUtil.computeLength(points);
             distanceString = df.format(distance);
@@ -266,6 +295,8 @@ public class ExerciseFragment extends Fragment implements OnMapReadyCallback, Lo
             user.put("latitude", latitudeString);
             user.put("longitude", longitudeString);
             user.put("distancecover", distanceString);
+            user.put("lonlist", lonListText);
+            user.put("latlist", latListText);
 
             documentReference.update(user).addOnSuccessListener(new OnSuccessListener<Void>() {
                 @Override

@@ -51,7 +51,6 @@ public class MainActivity extends AppCompatActivity {
 
         Toolbar toolBar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolBar);
-
         getSupportActionBar().setTitle("WeFit");
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
