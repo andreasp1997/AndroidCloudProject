@@ -153,6 +153,7 @@ public class DietFragment extends Fragment {
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
 
                 openDialogDiet();
+                pos = position;
                 return true;
             }
         });
@@ -261,7 +262,7 @@ public class DietFragment extends Fragment {
                     case 0:
                         selectedHour = timePicker.getCurrentHour();
                         selectedMinute = timePicker.getCurrentMinute();
-                        selectedTime = String.valueOf(selectedHour) + ":" + String.valueOf(selectedMinute);
+                        selectedTime = (String.format("%02d:%02d", selectedHour, selectedMinute ));
                         completeMealInfo = selectedTime + " " + infoBox.getText();
 
                         documentReference.update("meal1", completeMealInfo).addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -276,7 +277,7 @@ public class DietFragment extends Fragment {
                     case 1:
                         selectedHour = timePicker.getCurrentHour();
                         selectedMinute = timePicker.getCurrentMinute();
-                        selectedTime = String.valueOf(selectedHour) + ":" + String.valueOf(selectedMinute);
+                        selectedTime = (String.format("%02d:%02d", selectedHour, selectedMinute ));
                         completeMealInfo = selectedTime + " " + infoBox.getText();
 
                         documentReference.update("meal2", completeMealInfo).addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -291,7 +292,7 @@ public class DietFragment extends Fragment {
                     case 2:
                         selectedHour = timePicker.getCurrentHour();
                         selectedMinute = timePicker.getCurrentMinute();
-                        selectedTime = String.valueOf(selectedHour) + ":" + String.valueOf(selectedMinute);
+                        selectedTime = (String.format("%02d:%02d", selectedHour, selectedMinute ));
                         completeMealInfo = selectedTime + " " + infoBox.getText();
 
                         documentReference.update("meal3", completeMealInfo).addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -306,7 +307,7 @@ public class DietFragment extends Fragment {
                     case 3:
                         selectedHour = timePicker.getCurrentHour();
                         selectedMinute = timePicker.getCurrentMinute();
-                        selectedTime = String.valueOf(selectedHour) + ":" + String.valueOf(selectedMinute);
+                        selectedTime = (String.format("%02d:%02d", selectedHour, selectedMinute ));
                         completeMealInfo = selectedTime + " " + infoBox.getText();
 
                         documentReference.update("meal4", completeMealInfo).addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -321,7 +322,7 @@ public class DietFragment extends Fragment {
                     case 4:
                         selectedHour = timePicker.getCurrentHour();
                         selectedMinute = timePicker.getCurrentMinute();
-                        selectedTime = String.valueOf(selectedHour) + ":" + String.valueOf(selectedMinute);
+                        selectedTime = (String.format("%02d:%02d", selectedHour, selectedMinute ));
                         completeMealInfo = selectedTime + " " + infoBox.getText();
 
                         documentReference.update("meal5", completeMealInfo).addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -336,7 +337,7 @@ public class DietFragment extends Fragment {
                     case 5:
                         selectedHour = timePicker.getCurrentHour();
                         selectedMinute = timePicker.getCurrentMinute();
-                        selectedTime = String.valueOf(selectedHour) + ":" + String.valueOf(selectedMinute);
+                        selectedTime = (String.format("%02d:%02d", selectedHour, selectedMinute ));
                         completeMealInfo = selectedTime + " " + infoBox.getText();
 
                         documentReference.update("meal6", completeMealInfo).addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -351,7 +352,7 @@ public class DietFragment extends Fragment {
                     case 6:
                         selectedHour = timePicker.getCurrentHour();
                         selectedMinute = timePicker.getCurrentMinute();
-                        selectedTime = String.valueOf(selectedHour) + ":" + String.valueOf(selectedMinute);
+                        selectedTime = (String.format("%02d:%02d", selectedHour, selectedMinute ));
                         completeMealInfo = selectedTime + " " + infoBox.getText();
 
                         documentReference.update("meal7", completeMealInfo).addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -366,7 +367,7 @@ public class DietFragment extends Fragment {
                     case 7:
                         selectedHour = timePicker.getCurrentHour();
                         selectedMinute = timePicker.getCurrentMinute();
-                        selectedTime = String.valueOf(selectedHour) + ":" + String.valueOf(selectedMinute);
+                        selectedTime = (String.format("%02d:%02d", selectedHour, selectedMinute ));
                         completeMealInfo = selectedTime + " " + infoBox.getText();
 
                         documentReference.update("meal8", completeMealInfo).addOnSuccessListener(new OnSuccessListener<Void>() {
